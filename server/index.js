@@ -9,30 +9,48 @@ app.use(express.json());
 const db = mysql.createPool({
     host: "localhost",
     user: "root",
-    password: "",
-    database: "bditens",
-    port: 3301,
+    password: "root123",
+    database: "bdexercicios",
 
  }) 
 
- 
+ //Read
+ app.get("/itens", (req, res) => {
 
- app.get("/", (req, res) =>{
-    let SQL = "INSERT INTO listaitens ( itens ) VALUES ('Comprar comidas')";
-    
+    let SQL = "SELECT * from listaexercicios";
 
     db.query(SQL, (err, result) => {
+        if(err) console.log(err);
+        else res.send(result);
+    })
+ })
+
+
+ //Create
+ app.post("/item", (req, res) => {
+    const { item } = req.body;
+    let SQL = "INSERT INTO listaexercicios ( itens ) VALUES (?)";
+    db.query(SQL, item, (err, result) => {
         console.log(err);
     })
-
-    res.send("enviado")
  })
+
+ //DELETE
+ app.delete("/item/:id", (req, res) => {
+
+    const { id } = req.params;
+    console.log("Informação: ", id)
+
+    let SQL = "DELETE FROM listaexercicios WHERE (`id` = ? )";
+
+    db.query(SQL, id, (err, result) => {
+        console.log(err);
+    })
+ })
+
 
 app.listen(3001, () => {
 
     console.log ("rodando servidor");
 
 });
-
-
-
